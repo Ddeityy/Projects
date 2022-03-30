@@ -4,7 +4,7 @@ import discord
 import asyncio
 from dotenv import load_dotenv
 from datetime import datetime
-from discord.ext import commands, tasks
+from discord.ext import tasks
 from init_func import get_names, get_scroffi, get_scrim_time, get_maps, get_pregame
 
 load_dotenv()
