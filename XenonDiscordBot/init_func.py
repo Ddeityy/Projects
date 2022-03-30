@@ -36,9 +36,6 @@ if not creds or not creds.valid:
           
 print(f"Startup complete!\t[ {(time.time()-startTime):.2f}s ]")
 
-service = build('sheets', 'v4', credentials=creds)
-sheet = service.spreadsheets()
-
 yellow = {
     "blue" : 0.6,
     "green" : 0.8980392,
@@ -84,6 +81,12 @@ def get_day():
         day = "sunday"
     return day
 
+day = get_day()
+weekday = days[day]
+
+service = build('sheets', 'v4', credentials=creds)
+sheet = service.spreadsheets()
+
 def get_names():
     names = ["Gamers: \n"]
     for i in range(10, 19):
@@ -110,9 +113,6 @@ def get_names():
             
         result = "".join([str(item) for item in names])
     return result
-
-day = get_day()
-weekday = days[day]
 
 def get_pregame():
     pregame_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}3").execute()
@@ -156,4 +156,10 @@ def get_maps():
     maps_value = str(maps_raw["values"])
     maps = maps_value.strip("[['']]").replace(" + ", " and ").replace("Prod", "Product")
     return maps
+
+def get_enemy():
+    enemy_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}5").execute()
+    enemy_value = str(enemy_raw["values"])
+    enemy = enemy_value.strip("[['']]")
+    return enemy
 
