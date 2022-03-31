@@ -81,14 +81,12 @@ def get_day():
         day = "sunday"
     return day
 
-day = get_day()
-weekday = days[day]
-
 service = build('sheets', 'v4', credentials=creds)
 sheet = service.spreadsheets()
 
 def get_names():
     names = ["Gamers: \n"]
+    weekday = days[get_day()]
     for i in range(10, 19):
         name = sheet.values().get(spreadsheetId=ID, range="Xenon!C"+str(i)).execute()
         player_name = str(name["values"])
@@ -115,6 +113,7 @@ def get_names():
     return result
 
 def get_pregame():
+    weekday = days[get_day()]
     pregame_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}3").execute()
     try:
         pregame_value = str(pregame_raw["values"])
@@ -124,6 +123,7 @@ def get_pregame():
         return None
 
 def get_scroffi():
+    weekday = days[get_day()]
     scroffi_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}7").execute()
     try:
         scroffi_value = str(scroffi_raw["values"])
@@ -142,6 +142,7 @@ def get_scroffi():
             return scroffi
         
 def get_scrim_time():
+    weekday = days[get_day()]
     try:
         time_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}4").execute()
         time_value = str(time_raw["values"])
@@ -152,14 +153,15 @@ def get_scrim_time():
         return time
 
 def get_maps():
+    weekday = days[get_day()]
     maps_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}6").execute()
     maps_value = str(maps_raw["values"])
-    maps = maps_value.strip("[['']]").replace(" + ", " and ").replace("Prod", "Product")
+    maps = maps_value.strip("[['']]").replace(" + ", " and ")
     return maps
 
 def get_enemy():
+    weekday = days[get_day()]
     enemy_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}5").execute()
     enemy_value = str(enemy_raw["values"])
     enemy = enemy_value.strip("[['']]")
     return enemy
-
