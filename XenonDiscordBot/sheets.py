@@ -17,11 +17,33 @@ bot_command = commands.Bot(command_prefix='.')
 @tasks.loop(minutes=1)                
 async def update():
     threading.Timer(60, update).start()
-    channel = await bot.fetch_channel('958745386825170974')
+    channel = await bot.fetch_channel('569944018482364438')
     now = datetime.now()
     current_time = now.strftime("%H:%M")
     pregame = get_pregame()
     if pregame != None:
+        if current_time == "20:00":
+            pregame = get_pregame()
+            scrim_time = get_scrim_time()
+            if scrim_time == None:
+                pass
+        else:
+            if pregame == None:
+                roster = get_names()
+                scroffi = get_scroffi()
+                maps = get_maps()
+                enemy = get_enemy()
+                await channel.send(f"@everyone\nWe have {scroffi} today at {scrim_time} against {enemy}.\nWe're playing {maps}.\n{roster}")
+                await asyncio.sleep(60)
+            else:
+                roster = get_names()
+                scroffi = get_scroffi()
+                scrim_time = get_scrim_time()
+                maps = get_maps()
+                enemy = get_enemy()
+                await channel.send(f"@everyone\nWe have a pregame/maptalk at {pregame}\n{scroffi} at {scrim_time} against {enemy}.\nWe're playing {maps}.\n{roster}")  
+                await asyncio.sleep(60)
+    else:
         if current_time == "20:00":
             pregame = get_pregame()
             scrim_time = get_scrim_time()
@@ -43,8 +65,7 @@ async def update():
                     enemy = get_enemy()
                     await channel.send(f"@everyone\nWe have a pregame/maptalk at {pregame}\n{scroffi} at {scrim_time} against {enemy}.\nWe're playing {maps}.\n{roster}")  
                     await asyncio.sleep(60)
-    else:
-        if current_time == "21:00":
+        elif current_time == "21:00":
             pregame = get_pregame()
             scrim_time = get_scrim_time()
             if scrim_time == None:
@@ -69,7 +90,7 @@ async def update():
     
 update.start() 
              
-bot.run(TOKEN)
+bot.run(TOKEN, reconnect=True)
 
      
         

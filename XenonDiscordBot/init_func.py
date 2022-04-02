@@ -89,8 +89,7 @@ def get_names():
     weekday = days[get_day()]
     for i in range(10, 19):
         name = sheet.values().get(spreadsheetId=ID, range="Xenon!C"+str(i)).execute()
-        player_name = str(name["values"])
-        str_name = player_name.strip("[['']]")
+        str_name = str(name["values"]).strip("[['']]")
         colors = sheet.get(spreadsheetId=ID, ranges=f"Xenon!{weekday}"+str(i), includeGridData=True).execute()
         cell_blue = colors["sheets"][0]["data"][0]["rowData"][0]["values"][0]["userEnteredFormat"]["backgroundColor"]["blue"]
         cell_green = colors["sheets"][0]["data"][0]["rowData"][0]["values"][0]["userEnteredFormat"]["backgroundColor"]["green"]
@@ -116,8 +115,7 @@ def get_pregame():
     weekday = days[get_day()]
     pregame_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}3").execute()
     try:
-        pregame_value = str(pregame_raw["values"])
-        pregame = pregame_value.strip("[['']]")
+        pregame = str(pregame_raw["values"]).strip("[['']]")
         return pregame
     except:
         return None
@@ -145,23 +143,22 @@ def get_scrim_time():
     weekday = days[get_day()]
     try:
         time_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}4").execute()
-        time_value = str(time_raw["values"])
-        time = time_value.strip("[['']]")
+        time = str(time_raw["values"]).strip("[['']]")
         return time
     except:
-        time == None
+        time = None
         return time
 
 def get_maps():
     weekday = days[get_day()]
     maps_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}6").execute()
-    maps_value = str(maps_raw["values"])
-    maps = maps_value.strip("[['']]").replace(" + ", " and ")
+    maps = str(maps_raw["values"]).strip("[['']]").replace(" + ", " and ")
     return maps
 
 def get_enemy():
-    weekday = days[get_day()]
-    enemy_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}5").execute()
-    enemy_value = str(enemy_raw["values"])
-    enemy = enemy_value.strip("[['']]")
-    return enemy
+        weekday = days[get_day()]
+        enemy_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}5").execute()
+        enemy = str(enemy_raw["values"]).strip("[['']]")
+        return enemy
+
+print(get_scrim_time())
