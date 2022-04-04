@@ -6,9 +6,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import datetime
+import pprint
 
-CREDENTIALS = r"C:\Users\ddeit\Desktop\pythonProject\XenonDiscordBot\credentials.json"
-JTOKEN = r'C:\Users\ddeit\Desktop\pythonProject\token.json'
+CREDENTIALS = r"C:\Users\ddeit\Desktop\Xenonbot\XenonDiscordBot\credentials.json"
+JTOKEN = r'C:\Users\ddeit\Desktop\Xenonbot\token.json'
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
@@ -115,8 +116,11 @@ def get_pregame():
     weekday = days[get_day()]
     pregame_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}3").execute()
     try:
-        pregame = str(pregame_raw["values"]).strip("[['']]")
-        return pregame
+        if "<" in str(pregame_raw["values"]):
+            return None
+        else:
+            pregame = str(pregame_raw["values"]).strip("[['']]")
+            return pregame
     except:
         return None
 
@@ -160,5 +164,3 @@ def get_enemy():
         enemy_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}5").execute()
         enemy = str(enemy_raw["values"]).strip("[['']]")
         return enemy
-
-print(get_scrim_time())
