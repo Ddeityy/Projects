@@ -6,7 +6,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import datetime
-import pprint
 
 CREDENTIALS = r"C:\Users\ddeit\Desktop\Xenonbot\XenonDiscordBot\credentials.json"
 JTOKEN = r'C:\Users\ddeit\Desktop\Xenonbot\token.json'

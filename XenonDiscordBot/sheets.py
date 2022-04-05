@@ -21,7 +21,7 @@ async def update_20():
     pregame = get_pregame()
     if current_time == "20:00" and pregame == None:
         scrim_time = get_scrim_time()
-        if scrim_time != None:
+        if scrim_time != None and scrim_time != "21:00 CEST" or "21:00 CET":
             roster = get_names()
             scroffi = get_scroffi()
             scrim_time = get_scrim_time()
@@ -53,7 +53,7 @@ async def update_21():
             print(f"21:  {scroffi} at {scrim_time} against {enemy}.\nWe're playing {maps}.\n{roster}")
             await asyncio.sleep(360)
             
-@tasks.loop(minutes=1) #Scrim + Official                 
+@tasks.loop(minutes=1) #Scrim + Official                
 async def update_scroffi(): 
     threading.Timer(60, update_scroffi).start()
     channel = await bot.fetch_channel('569944018482364438')
@@ -75,7 +75,6 @@ async def update_scroffi():
 @tasks.loop(minutes=1) #Timer            
 async def update_timer():
     threading.Timer(60, update_scroffi).start()
-    channel = await bot.fetch_channel('569944018482364438')
     now = datetime.now()
     current_time = now.strftime("%H:%M")
     print(current_time)   
