@@ -8,7 +8,6 @@ from google.oauth2.credentials import Credentials
 import datetime
 
 CREDENTIALS = r"C:\Users\ddeit\Desktop\Xenonbot\XenonDiscordBot\credentials.json"
-JTOKEN = r'C:\Users\ddeit\Desktop\Xenonbot\token.json'
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
@@ -22,8 +21,8 @@ startTime = time.time()
 print("Initializing Google Authentication...")
 
 creds = None
-if os.path.exists(JTOKEN):
-    creds = Credentials.from_authorized_user_file(JTOKEN, SCOPES)
+if os.path.exists('token.json'):
+    creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
@@ -31,7 +30,7 @@ if not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS, SCOPES)
         creds = flow.run_local_server(port=0)
     # Save the credentials for the next run
-    with open(JTOKEN, 'w') as token:
+    with open(r'C:\Users\ddeit\Desktop\Xenonbot\XenonDiscordBot\token.json', 'w') as token:
         token.write(creds.to_json())
           
 print(f"Startup complete!\t[ {(time.time()-startTime):.2f}s ]")
@@ -116,12 +115,12 @@ def get_pregame():
     pregame_raw = sheet.values().get(spreadsheetId=ID, range=f"Xenon!{weekday}3").execute()
     try:
         if "<" in str(pregame_raw["values"]):
-            return None
+            return ""
         else:
             pregame = str(pregame_raw["values"]).strip("[['']]")
             return pregame
     except:
-        return None
+        return ""
 
 def get_scroffi():
     weekday = days[get_day()]
@@ -135,7 +134,7 @@ def get_scroffi():
             scroffi = scroffi_value.strip("[['']]").replace("Official", "official").replace("UGC", "A UGC")
             return scroffi
     except:
-        if get_pregame() == None:
+        if get_pregame() == "":
             scroffi = "a scrim"   
             return scroffi 
         else:
@@ -149,7 +148,7 @@ def get_scrim_time():
         time = str(time_raw["values"]).strip("[['']]")
         return time
     except:
-        time = None
+        time = ""
         return time
 
 def get_maps():
