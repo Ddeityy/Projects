@@ -34,8 +34,7 @@ class Post(models.Model):
         (NEWS, 'Новость'),
         (ARTICLE, 'Статья'),
     )
-    
-    сategory = models.CharField(max_length=1, choices=CATEGORY_CHOICE, default=ARTICLE)
+    сategoryType = models.CharField(max_length=1, choices=CATEGORY_CHOICE, default=ARTICLE)
     creation_timedate = models.DateTimeField(auto_now_add=True)
     postCategory = models.ManyToManyField(Category, through="PostCategory")
     title = models.CharField(max_length=128)

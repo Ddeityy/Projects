@@ -1,0 +1,64 @@
+from NewsPortal.models import *
+
+user1 = User.objects.create_user('Daniel')
+user2 = User.objects.create_user('Alex')
+
+Author.objects.create(authorUser=user1)
+Author.objects.create(authorUser=user2)
+
+Category.objects.create(name='IT') 
+Category.objects.create(name='Sports')
+Category.objects.create(name='Politics')
+Category.objects.create(name='Business')
+
+author1 = Author.objects.get(id=1)
+author2 = Author.objects.get(id=2)
+
+
+Post.objects.create(author=author1, сategoryType='A', title='Article 1 Title', text='LongText')
+Post.objects.create(author=author1, сategoryType='A', title='Article 2 Title', text='LongText')
+Post.objects.create(author=author2, сategoryType='N', title='News Title', text='LongText')
+
+Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+Post.objects.get(id=1).postCategory.add(Category.objects.get(id=4))
+
+Post.objects.get(id=2).postCategory.add(Category.objects.get(id=2))
+Post.objects.get(id=2).postCategory.add(Category.objects.get(id=4))
+
+Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))
+Post.objects.get(id=3).postCategory.add(Category.objects.get(id=4))
+
+Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='Negative comment')
+Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=2).authorUser, text='Positive comment')
+Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).authorUser, text='Neutral comment')
+Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text='Negative comment')
+
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=4).dislike()
+
+Post.objects.get(id=1).like()
+Post.objects.get(id=1).like()
+Post.objects.get(id=2).dislike()
+Post.objects.get(id=3).like()
+
+a = Author.objects.order_by("-authorRating")[:1]
+for i in a:
+    i.authorRating
+    i.authorUser.username
+
+b = Post.objects.order_by("-rating")[:1]
+for i in b:
+    i.creation_timedate
+    i.author.authorUser.username
+    i.rating
+    i.preview()
+
+c = Post.objects.get(id=1).comment_set.all()
+for i in c:
+    i.creation_timedate
+    i.commentUser
+    i.rating
+    i.text
+
