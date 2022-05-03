@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 
-  
 
 class Author(models.Model):
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -24,7 +23,7 @@ class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
 
-class Post(models.Model):
+class Post(models.Model):  
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     
     NEWS = 'N'
@@ -51,7 +50,9 @@ class Post(models.Model):
     def dislike(self):
         self.rating -=1
         self.save()
-            
+       
+    def __str__(self):
+        return f'{self.title.title()} by {self.author.authorUser}'        
 
 class PostCategory(models.Model):
     postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)

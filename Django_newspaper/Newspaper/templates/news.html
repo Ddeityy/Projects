@@ -1,0 +1,26 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Articles
+{% endblock title %}
+
+{% block content %}
+    <h3>{{ time_now|date:'M d Y' }}</h3>
+    <p>
+    <h1>{{ news|length }} articles </h1>
+    <hr>
+    {% if news %}
+        {% for n in news %}
+            <h1>{{ n.title|censor }}
+            <p>
+            <h2>{{ n.creation_timedate|date:'d M Y' }}
+            <p>
+            <h3>{{ n.text|truncatechars:20|censor }}
+            <hr>
+        {% endfor %}
+    {% else %}
+        <h2>Новостей нет!</h2>
+    {% endif %}
+{% endblock content %}
