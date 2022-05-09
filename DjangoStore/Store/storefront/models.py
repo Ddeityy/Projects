@@ -1,8 +1,14 @@
 from django.db import models
+from django.urls import *
 from django.core.validators import MinValueValidator
 
 
-# Товар для нашей витрины 
+class Material(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     name = models.CharField(
         max_length=50,
@@ -19,11 +25,22 @@ class Product(models.Model):
         related_name='products', # все продукты в категории будут доступны через поле products
     )
     price = models.FloatField(
+        default=0.0,
         validators=[MinValueValidator(0.0)],
     )
 
+    material = models.ManyToManyField(Material, through="ProductMaterial")
+    
     def __str__(self):
         return f'{self.name.title()}: {self.description[:20]}'
+    
+    def get_absolute_url(self):
+        return reverse("product_detail", args=[str(self.id)])
+    
+    
+class ProductMaterial(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
 
 
 # Категория, к которой будет привязываться товар
