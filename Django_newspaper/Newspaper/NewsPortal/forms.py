@@ -1,11 +1,13 @@
-from dataclasses import field
-from django import forms
+from django.forms import *
 from django.core.exceptions import ValidationError
 from .models import *
+from allauth.account.forms import SignupForm
+from django.contrib.auth.models import Group
+from django.contrib.auth.forms import UserCreationForm
 
 
-class UserForm(forms.ModelForm):
-    authorUser = forms.CharField(
+class UserForm(ModelForm):
+    authorUser = CharField(
         label='Name'
     )
     class Meta:
@@ -15,10 +17,19 @@ class UserForm(forms.ModelForm):
             'age'
         ]
 
+class BasicSignupForm(SignupForm):
+    
+    def save(self, request):
+        user = super(BasicSignupForm, self).save(request)
+        basic_group = Group.objects.get(name='common')
+        basic_group.user_set.add(user)
+        return user
+
+
 class BaseRegisterForm(UserCreationForm):
-    email = forms.EmailField(label = "Email")
-    first_name = forms.CharField(label = "Имя")
-    last_name = forms.CharField(label = "Фамилия")
+    email = EmailField(label = "Email")
+    first_name = CharField(label = "Имя")
+    last_name = CharField(label = "Фамилия")
 
     class Meta:
         model = User
@@ -29,9 +40,9 @@ class BaseRegisterForm(UserCreationForm):
                   "password1", 
                   "password2", )
 
-class PostForm(forms.ModelForm):
-    text = forms.CharField()
-    postCategory = forms.ModelMultipleChoiceField(
+class PostForm(ModelForm):
+    text = CharField()
+    postCategory = ModelMultipleChoiceField(
         queryset=Category.objects.all(),
         label='Categories',
         )

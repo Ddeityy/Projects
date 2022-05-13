@@ -17,6 +17,7 @@ def author(request):
         premium_group.user_set.add(user)
     return redirect('/')
 
+
 class NewsList(ListView):
     model = Post
     ordering = '-creation_timedate'
@@ -40,6 +41,7 @@ class NewsList(ListView):
         context['filterset'] = self.filterset
         return context
 
+
 class ProfileList(ListView):
     template_name = 'profiles.html'
     model = Author
@@ -50,11 +52,13 @@ class ProfileList(ListView):
         context = super().get_context_data(**kwargs)
         return context
 
+
 class BaseRegisterView(CreateView):
     model = User
     form_class = BaseRegisterForm
     success_url = '/'
-    
+
+
 class ProfileDetail(DetailView):
     model = Author
     template_name = 'profile.html'
@@ -63,7 +67,8 @@ class ProfileDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
+
+
 class SearchView(ListView):
     template_name = 'search.html'
     model = Post
@@ -74,7 +79,8 @@ class SearchView(ListView):
         context = super().get_context_data(**kwargs)
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())  # вписываем наш фильтр в контекст
         return context
-    
+
+
 class PostDetail(DetailView):
     model = Post
     template_name = 'article.html'
@@ -84,11 +90,13 @@ class PostDetail(DetailView):
         context = super().get_context_data(**kwargs)
         return context 
 
+
 class EditProfile(LoginRequiredMixin, UpdateView):
     form_class = UserForm
     model = Author
     template_name = 'edit_user.html'
     success_url = reverse_lazy('users')
+
 
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
@@ -97,6 +105,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(name = 'author').exists()
         return context   
+
 
 class PostDelete(DeleteView):
     form_class = PostForm
@@ -116,6 +125,7 @@ class NewsCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         post.categoryType = 'N'
         return super().form_valid(form)
 
+
 class ArticleCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     permission_required = ('NewsPortal.add_post', 'NewsPortal.change_post')
     form_class = PostForm
@@ -126,6 +136,7 @@ class ArticleCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         post = form.save(commit=False)
         post.categoryType = 'A'
         return super().form_valid(form)
+
 
 class PostUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     permission_required = ('NewsPortal.add_post', 'NewsPortal.change_post')
