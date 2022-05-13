@@ -28,7 +28,7 @@ class Product(models.Model):
         default=0.0,
         validators=[MinValueValidator(0.0)],
     )
-
+ 
     material = models.ManyToManyField(Material, through="ProductMaterial")
     
     def __str__(self):

@@ -2,11 +2,20 @@ from django.views.generic import *
 from .models import *
 from django.urls import *
 from .filters import *
-from django.views.generic import *
 from .forms import *
 from datetime import datetime
+from django.contrib.auth.mixins import *
+from django.shortcuts import redirect
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
+def author(request):
+    user = request.user
+    premium_group = Group.objects.get(name='author')
+    if not request.user.groups.filter(name='author').exists():
+        premium_group.user_set.add(user)
+    return redirect('/')
 
 class NewsList(ListView):
     model = Post
@@ -30,6 +39,30 @@ class NewsList(ListView):
         context['time_now'] = datetime.utcnow()
         context['filterset'] = self.filterset
         return context
+
+class ProfileList(ListView):
+    template_name = 'profiles.html'
+    model = Author
+    paginate_by = 10
+    context_object_name = 'users'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+class BaseRegisterView(CreateView):
+    model = User
+    form_class = BaseRegisterForm
+    success_url = '/'
+    
+class ProfileDetail(DetailView):
+    model = Author
+    template_name = 'profile.html'
+    context_object_name = 'profile'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
     
 class SearchView(ListView):
     template_name = 'search.html'
@@ -49,9 +82,31 @@ class PostDetail(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        return context
-   
-class NewsCreate(CreateView):
+        return context 
+
+class EditProfile(LoginRequiredMixin, UpdateView):
+    form_class = UserForm
+    model = Author
+    template_name = 'edit_user.html'
+    success_url = reverse_lazy('users')
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'index.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name = 'author').exists()
+        return context   
+
+class PostDelete(DeleteView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_delete.html'
+    success_url = reverse_lazy('news_list')
+
+
+class NewsCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('NewsPortal.add_post', 'NewsPortal.change_post')
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -60,9 +115,9 @@ class NewsCreate(CreateView):
         post = form.save(commit=False)
         post.categoryType = 'N'
         return super().form_valid(form)
-    
 
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('NewsPortal.add_post', 'NewsPortal.change_post')
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -71,16 +126,10 @@ class ArticleCreate(CreateView):
         post = form.save(commit=False)
         post.categoryType = 'A'
         return super().form_valid(form)
-    
-    
-class PostUpdate(UpdateView):
+
+class PostUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('NewsPortal.add_post', 'NewsPortal.change_post')
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
-    success_url = reverse_lazy('news_list')
 
-    
-class PostDelete(DeleteView):
-    form_class = PostForm
-    model = Post
-    success_url = reverse_lazy('news_list')

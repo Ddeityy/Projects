@@ -1,7 +1,33 @@
+from dataclasses import field
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import *
 
+
+class UserForm(forms.ModelForm):
+    authorUser = forms.CharField(
+        label='Name'
+    )
+    class Meta:
+        model = Author
+        fields = [
+            'authorUser',
+            'age'
+        ]
+
+class BaseRegisterForm(UserCreationForm):
+    email = forms.EmailField(label = "Email")
+    first_name = forms.CharField(label = "Имя")
+    last_name = forms.CharField(label = "Фамилия")
+
+    class Meta:
+        model = User
+        fields = ("username", 
+                  "first_name", 
+                  "last_name", 
+                  "email", 
+                  "password1", 
+                  "password2", )
 
 class PostForm(forms.ModelForm):
     text = forms.CharField()

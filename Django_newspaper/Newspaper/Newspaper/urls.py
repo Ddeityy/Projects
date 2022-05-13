@@ -15,10 +15,28 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from NewsPortal.views import *
+from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='http://127.0.0.1:8000/news/')),
     path('admin/', admin.site.urls),
-    path('news/', include('NewsPortal.urls')),
-    path('articles/', include('NewsPortal.urls')),
-    path('search/', include('NewsPortal.urls')),
+    path('news/', NewsList.as_view(), name='news_list'),
+    path('news/<int:pk>', PostDetail.as_view(), name='post_detail'),
+    path('news/create/', NewsCreate.as_view(), name='news_create'),
+    path('news/<int:pk>/edit/', PostUpdate.as_view(), name='post_update'),
+    path('news/<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
+    path('articles/create/', ArticleCreate.as_view(), name='article_create'),
+    path('articles/<int:pk>/edit/', PostUpdate.as_view(), name='post_update'),
+    path('articles/<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
+    path('news/search/', SearchView.as_view(), name='search'),
+    path('users/', ProfileList.as_view(), name='users'),
+    path('users/<int:pk>', ProfileDetail.as_view(), name='profile_detail'),
+    path('users/<int:pk>/edit', EditProfile.as_view(), name='edit_user'),
+    path('accounts/', include('allauth.urls')),
+    path('account/', IndexView.as_view(), name = 'index'),
+    path('account/logout/', LogoutView.as_view(template_name = 'account/logout.html'), name='logout'),
+    path('account/login/', LoginView.as_view(template_name = 'account/login.html'), name='login'),
+    path('account/signup/', BaseRegisterView.as_view(template_name = 'account/signup.html'), name='signup'),
+    path('account/author/', author, name = 'author')    
 ]
