@@ -4,12 +4,17 @@
 
 {% block content %}
     {% if article %}
-            <h1>{{ article.title|censor }}  
-            <hr>
-            <h2>{{ article.creation_timedate|date:'d M Y' }}
-            <hr>
-            <h3>{{ article.text|censor }}
+        <h1>{{ article.title|censor }}  
+        <hr>
+        <h2>{{ article.creation_timedate|date:'d M Y' }}
+        <hr>
+        <h3>{{ article.text|censor }}
+        <hr>
+        Categories: 
+        {% for a in article.postCategory.all %}
+            <a class="nav-link" href="/categories/">{{ a.name }}</a>
+        {% endfor %}
     {% else %}
         <h2>Статьи нет!</h2>
     {% endif %}
-{% endblock content %}
+{% endblock content %} 

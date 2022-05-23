@@ -26,20 +26,6 @@ class BasicSignupForm(SignupForm):
         return user
 
 
-class BaseRegisterForm(UserCreationForm):
-    email = EmailField(label = "Email")
-    first_name = CharField(label = "Имя")
-    last_name = CharField(label = "Фамилия")
-
-    class Meta:
-        model = User
-        fields = ("username", 
-                  "first_name", 
-                  "last_name", 
-                  "email", 
-                  "password1", 
-                  "password2", )
-
 class PostForm(ModelForm):
     text = CharField()
     postCategory = ModelMultipleChoiceField(
@@ -59,10 +45,4 @@ class PostForm(ModelForm):
         cleaned_data = super().clean()
         title = cleaned_data.get("title")
         text = cleaned_data.get("text")
-
-        if title == text:
-            raise ValidationError(
-                "Описание не должно быть идентично названию."
-            )
-
         return cleaned_data

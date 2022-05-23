@@ -8,6 +8,10 @@ from django.contrib.auth.mixins import *
 from django.shortcuts import redirect
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 @login_required
 def author(request):
@@ -17,6 +21,14 @@ def author(request):
         premium_group.user_set.add(user)
     return redirect('/')
 
+
+@login_required
+def subscribe(request, pk):
+    a = request.user
+    b = Category.objects.get(id=pk)
+    b.subscribers.add(a)
+    return redirect('/categories/')
+    
 
 class NewsList(ListView):
     model = Post
@@ -55,7 +67,7 @@ class ProfileList(ListView):
 
 class BaseRegisterView(CreateView):
     model = User
-    form_class = BaseRegisterForm
+    form_class = SignupForm
     success_url = '/'
 
 
@@ -80,6 +92,12 @@ class SearchView(ListView):
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())  # вписываем наш фильтр в контекст
         return context
 
+class Categories(ListView):
+    template_name = 'categories.html'
+    model = Category
+    ordering = 'name'
+    context_object_name = 'categories'
+    
 
 class PostDetail(DetailView):
     model = Post
@@ -136,8 +154,8 @@ class ArticleCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         post = form.save(commit=False)
         post.categoryType = 'A'
         return super().form_valid(form)
-
-
+        
+        
 class PostUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     permission_required = ('NewsPortal.add_post', 'NewsPortal.change_post')
     form_class = PostForm

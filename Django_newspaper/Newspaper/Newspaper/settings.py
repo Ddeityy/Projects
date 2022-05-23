@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-import django
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,12 +29,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTIFICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+ACCOUNT_FORMS = {'signup': 'NewsPortal.forms.BasicSignupForm'}
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
@@ -52,7 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'NewsPortal',
+    'NewsPortal.apps.NewsportalConfig',
     'django_filters',
     'allauth',
     'allauth.account',
@@ -82,7 +84,7 @@ ROOT_URLCONF = 'Newspaper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        'DIRS': [os.path.join(BASE_DIR, "templates"), os.path.join(BASE_DIR, "templates/accounts")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,3 +153,16 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+load_dotenv()
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ADMINS = [
+    ('Deity', 'ddeityy.dev@gmail.com'),
+]
+SERVER_EMAIL = 'django-ddeityy@yandex.com'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST='smtp.yandex.ru'
+EMAIL_PORT=465
+EMAIL_USE_SSL=True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.com'
