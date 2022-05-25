@@ -139,7 +139,7 @@ class NewsCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     template_name = 'post_edit.html'
     success_url = reverse_lazy('news_list')
     def form_valid(self, form):
-        post = form.save(commit=False)
+        post = form.save()
         post.categoryType = 'N'
         return super().form_valid(form)
 

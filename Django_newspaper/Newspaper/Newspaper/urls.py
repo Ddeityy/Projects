@@ -42,5 +42,5 @@ urlpatterns = [
     path('account/logout/', LogoutView.as_view(template_name = 'account/logout.html'), name='logout'),
     path('account/login/', LoginView.as_view(template_name = 'account/login.html'), name='login'),
     path('account/signup/', BaseRegisterView.as_view(template_name = 'account/signup.html'), name='signup'),
-    path('account/author/', author, name = 'author')    
+    path('account/author/', author, name = 'author'),
 ]

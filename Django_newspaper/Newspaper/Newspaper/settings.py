@@ -44,6 +44,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 SITE_ID = 1
 
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'NewsPortal.apps.NewsportalConfig',
     'django_filters',
+    'django_apscheduler',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

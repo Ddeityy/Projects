@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New article!</title>
+</head>
+<body>
+    <h2>Здравствуй, {{ user }}.
+    <h2>Новая статья в твоём любимом разделе: {{ category_name }}
+    <p>
+    <h2><a href="{% url "post_detail" instance.id %}">{{ instance.title }}</a>
+    <p>
+    <h4>{{ instance.text|truncatechars:50 }}
+</body>
+</html>  
