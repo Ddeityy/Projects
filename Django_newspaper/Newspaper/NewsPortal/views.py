@@ -8,10 +8,7 @@ from django.contrib.auth.mixins import *
 from django.shortcuts import redirect
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.core.mail import send_mail
-from django.core.mail import EmailMultiAlternatives
+
 
 @login_required
 def author(request):
