@@ -59,7 +59,7 @@ class Command(BaseCommand):
         # добавляем работу нашему задачнику
         scheduler.add_job(
             send_weekly_mail,
-            trigger=CronTrigger(second="*/10"),  # То же, что и интервал, но задача тригера таким образом более понятна django
+            trigger=CronTrigger(day_of_week="mon", hour="00", minute="00"),  # То же, что и интервал, но задача тригера таким образом более понятна django
             id="send_weekly_mail",  # уникальный айди
             max_instances=1,
             replace_existing=True,
