@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def send_weekly_mail():
     for category in Category.objects.all():
         news_from_each_category = []
-        week_number_last = datetime.now().isocalendar()[1]
+        week_number_last = datetime.now().isocalendar()[1] - 1
         for news in Post.objects.filter(postCategory=category.id,
             creation_timedate__week=week_number_last).values('pk', 'title', 'creation_timedate', 'postCategory__name'):
             date_format = news.get("creation_timedate").strftime("%m/%d/%Y")
