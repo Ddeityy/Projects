@@ -44,6 +44,6 @@ class PostForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        title = cleaned_data.get("title")
+        title = cleaned_data.get("title") 
         text = cleaned_data.get("text")
         return cleaned_data
